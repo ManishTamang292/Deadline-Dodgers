@@ -12,8 +12,8 @@ ACCENT = "#4CAF50"
 DANGER = "#e53935"
 TEXT_GRAY = "#aaaaaa"
 
-ctk.set_appearance_mode("black")
-ctk.set_default_color_theme("dark-blue")
+ctk.set_appearance_mode("white")
+ctk.set_default_color_theme("blue")
 
 
 class LiveCampusHubApp(ctk.CTk):
@@ -418,46 +418,16 @@ class LiveCampusHubApp(ctk.CTk):
         ).pack(pady=20)
 
         events = [
-    {
-        "title": "🎤Live Music Night",
-        "date": "19 Mar 2026",
-        "description": "Local bands performing across genres.",
-        "location": "The Halls, Wolverhampton"
-    },
-    {
-        "title": "💻Tech Fest 2026",
-        "date": "25 Apr 2026",
-        "description": "Technology showcase and student innovation event.",
-        "location": "City Campus"
-    },
-    {
-        "title": "🎉Open Evening",
-        "date": "27 May 2026",
-        "description": "Prospective students explore campus facilities.",
-        "location": "City Campus"
-    },
-    {
-        "title": "🎓Postgraduate Ceremony",
-        "date": "4 Jul 2026",
-        "description": "Celebration for postgraduate graduates.",
-        "location": "Graduation Hall"
-    },
-    {
-        "title": "📚Undergraduate Ceremony",
-        "date": "5 Jul 2026",
-        "description": "Graduation ceremony for undergraduate students.",
-        "location": "Graduation Hall"
-    }
-]
+            ("Open Evening", "27 May"),
+            ("Postgraduate Day", "4 Jul"),
+            ("Undergraduate Day", "4 Jul")
+        ]
 
         for event in events:
 
             card = ctk.CTkFrame(self.content, height=100)
             card.pack(fill="x", padx=120, pady=8)
             card.pack_propagate(False)
-
-            left_frame = ctk.CTkFrame(card, fg_color="transparent")
-            left_frame.pack(side="left", fill="both", expand=True, padx=30, pady=10)
 
             ctk.CTkLabel(
             left_frame,
@@ -497,11 +467,8 @@ class LiveCampusHubApp(ctk.CTk):
         ).pack(pady=20)
 
         transport = [
-                ("🚌 Bus Station", "5–7 minute walk from campus"),
-                ("🚋 Metro", "7–8 minute walk from campus"),
-                ("🚶 Walking Routes", "Quick campus navigation"),
-                ("🚕 Cab / Taxi", "Fast pickup services"),
-                ("🚆 Train Station", "Travel to other cities")
+            ("🚌 Bus Station", "5–7 minute walk from campus"),
+            ("🚋 Metro", "7–8 minute walk from campus, tram access to Birmingham")
         ]
 
         for name, info in transport:
@@ -601,7 +568,6 @@ class LiveCampusHubApp(ctk.CTk):
    # ---------------- CLUBS PAGE ----------------
 
     def page_clubs(self):
-
         self.clear_content()
 
         # Header
@@ -619,117 +585,18 @@ class LiveCampusHubApp(ctk.CTk):
         grid.grid_columnconfigure(1, weight=1)
 
         clubs = [
-        "⚖️ Law Club",
-        "💼 Business Club",
-        "♟ Chess Club",
-        "🎮 Gaming Club",
-        "🎵 Music Club",
-        "⚽ Sports Club"
+            "Law Society",
+            "Business Society",
+            "Chess Society",
+            "Gaming Society"
         ]
 
-        for i, club in enumerate(clubs):
+        for s in clubs:
 
-            card = ctk.CTkFrame(
-            grid,
-            height=140,
-            corner_radius=15,
-            fg_color="#3b3b3b"
-            )
+            card = ctk.CTkFrame(self.content)
+            card.pack(fill="x", pady=10)
 
-            card.grid(
-                row=i // 2,
-                column=i % 2,
-                padx=25,
-                pady=25,
-                sticky="nsew",
-                
-            )
-
-            grid.grid_rowconfigure(i // 2, weight=1)
-
-            label = ctk.CTkLabel(
-            card,
-            text=club,
-            font=ctk.CTkFont(size=18, weight="bold")
-            )
-            label.pack(expand=True)
-
-            # Make clickable
-            card.bind("<Button-1>", lambda e, c=club: self.open_club(c))
-            label.bind("<Button-1>", lambda e, c=club: self.open_club(c))
-
-
-# ---------------- CLUB DETAIL PAGE ----------------
-
-    def open_club(self, club_name):
-
-        self.clear_content()
-
-        # Title
-        ctk.CTkLabel(
-            self.content,
-            text=club_name,
-            font=ctk.CTkFont(size=28, weight="bold")
-        ).pack(pady=20)
-
-    # Description
-        descriptions = {
-        "⚖️ Law Club": "Discuss legal systems and debates.",
-        "💼 Business Club": "Entrepreneurship and networking.",
-        "♟ Chess Club": "Strategy and competitions.",
-        "🎮 Gaming Club": "Casual & competitive gaming.",
-        "🎵 Music Club": "Jam sessions and performances.",
-        "⚽ Sports Club": "Fitness and team sports."
-        }
-
-        desc = descriptions.get(club_name, "No description available.")
-
-        ctk.CTkLabel(
-            self.content,
-            text=desc,
-            font=ctk.CTkFont(size=14),
-            wraplength=500
-        ).pack(pady=10)
-
-    # Join system
-        self.joined = getattr(self, "joined", {})
-        is_joined = self.joined.get(club_name, False)
-
-        ctk.CTkButton(
-            self.content,
-            text="Leave Club" if is_joined else "Join Club",
-            fg_color="#e53935" if is_joined else "#4CAF50",
-            command=lambda: self.toggle_join(club_name)
-        ).pack(pady=20)
-
-    # Back button
-        ctk.CTkButton(
-            self.content,
-            text="⬅ Back",
-            command=self.page_clubs
-        ).pack(pady=10)
-
-
-# ---------------- JOIN / LEAVE LOGIC ----------------
-
-    def toggle_join(self, club_name):
-
-        # Ensure dictionary exists
-        self.joined = getattr(self, "joined", {})
-
-        # Get current state safely
-        current = self.joined.get(club_name, False)
-
-        # Toggle
-        new_state = not current
-        self.joined[club_name] = new_state
-
-        messagebox.showinfo(
-            "Club Update",
-            f"{'Joined' if new_state else 'Left'} {club_name}"
-        )
-
-        self.open_club(club_name)    
+            ctk.CTkLabel(card, text=s).pack(padx=15)
 
     def page_rewards(self):
 
